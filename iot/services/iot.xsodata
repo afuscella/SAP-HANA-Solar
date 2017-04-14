@@ -1,0 +1,54 @@
+service {
+    "SYSTEM"."public.iot.database::iot.Devices"     as "Devices"
+        navigates ( "ToLineItemsAssociation"        as "ToLineItems", 
+                    "ToAddressAssociation"          as "ToAddress",
+                    "ToGeolocationAssociation"      as "ToGeolocation",
+                    "ToCurrentTotalAssociation"     as "ToCurrentTotal",
+                    "ToCurrentMonthDataAssociation" as "ToCurrentMonthData",
+                    "ToLastMonthDataAssociation"    as "ToLastMonthData",
+                    "ToHourlyDataAssociation"       as "ToHourlyData")
+        ;
+        
+    "SYSTEM"."public.iot.database::iot.Address" as "Address"
+        ;
+        
+    "SYSTEM"."public.iot.database::iot.Geolocation" as "Geolocation"
+        ; 
+        
+    "public.iot.views/CV_CurrentTotal.calculationview" as "CurrentTotal" keys("Id") 
+        ;
+    
+    "public.iot.views/CV_CurrentMonthData.calculationview" as "CurrentMonthData" keys("Id", "Date")
+        ;
+    
+    "public.iot.views/CV_LastMonthData.calculationview" as "LastMonthData" keys("Id", "Date") 
+        ; 
+        
+    "public.iot.views/CV_HourlyData.calculationview" as "HourlyData" keys("Id", "Hour") 
+        ;
+        
+    "SYSTEM"."T_IOT_E7E2D267797BCD36B520" as "IoT" key generate local "LocalID"
+        ;
+        
+    association "ToAddressAssociation" principal "Devices"("device")
+    multiplicity "1" dependent "Address"("AddressId") multiplicity "1";
+    
+    association "ToGeolocationAssociation" principal "Devices"("device")
+    multiplicity "1" dependent "Geolocation"("GeolocationId") multiplicity "1";
+ 
+    association "ToCurrentTotalAssociation" principal "Devices"("id")
+    multiplicity "1" dependent "CurrentTotal"("Id") multiplicity "1";
+ 
+    association "ToCurrentMonthDataAssociation" principal "Devices"("id")
+    multiplicity "1" dependent "CurrentMonthData"("Id") multiplicity "*";
+ 
+    association "ToLastMonthDataAssociation" principal "Devices"("id")
+    multiplicity "1" dependent "LastMonthData"("Id") multiplicity "*";
+    
+    association "ToHourlyDataAssociation" principal "Devices"("id")
+    multiplicity "1" dependent "HourlyData"("Id") multiplicity "*";
+ 
+    association "ToLineItemsAssociation" principal "Devices"("id")
+    multiplicity "1" dependent "IoT"("G_DEVICE") multiplicity "*";
+        
+}

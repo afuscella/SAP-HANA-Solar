@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" id="CV_LastMonthData" applyPrivilegeType="NONE" dataCategory="CUBE" dimensionType="STANDARD" schemaVersion="2.3" defaultClient="crossClient" visibility="reportingEnabled" outputViewType="Aggregation" calculationScenarioType="TREE_BASED" enforceSqlExecution="false">
+<descriptions defaultDescription="CV_CurrentTotal"/>
+<localVariables/>
+<variableMappings/>
+<dataSources>
+  <DataSource id="T_IOT_E7E2D267797BCD36B520" type="DATA_BASE_TABLE">
+    <viewAttributes allViewAttributes="true"/>
+    <columnObject schemaName="SYSTEM" columnObjectName="T_IOT_E7E2D267797BCD36B520"/>
+  </DataSource>
+</dataSources>
+<calculationViews>
+  <calculationView xsi:type="Calculation:AggregationView" id="IoT" filterExpressionLanguage="COLUMN_ENGINE">
+    <viewAttributes>
+      <viewAttribute id="Device"/>
+      <viewAttribute id="Temperature"/>
+      <viewAttribute id="Tension"/>
+      <viewAttribute id="Luminisoty"/>
+      <viewAttribute id="Created"/>
+    </viewAttributes>
+    <calculatedViewAttributes>
+      <calculatedViewAttribute id="0MONTH" datatype="VARCHAR" length="7" expressionLanguage="COLUMN_ENGINE">
+        <formula>midstr(string(&quot;Created&quot;), 0, 4) + 
+midstr(string(&quot;Created&quot;), 5, 3)
+
+</formula>
+      </calculatedViewAttribute>
+    
+      <calculatedViewAttribute id="0CALMONTH" datatype="VARCHAR" length="7" expressionLanguage="COLUMN_ENGINE">
+    
+        <formula>midstr(string(now()), 0, 4) + midstr(string(now()), 5, 3)</formula>
+    
+      </calculatedViewAttribute></calculatedViewAttributes>
+    <input node="#T_IOT_E7E2D267797BCD36B520">
+      <mapping xsi:type="Calculation:AttributeMapping" target="Device" source="G_DEVICE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Tension" source="C_TENSION"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Created" source="G_CREATED"/>
+    
+      <mapping xsi:type="Calculation:AttributeMapping" target="Temperature" source="C_TEMPERATURE"/>
+      <mapping xsi:type="Calculation:AttributeMapping" target="Luminisoty" source="C_LUMINOSITY"/>
+    </input>
+    <filter>&quot;0MONTH&quot; &lt; &quot;0CALMONTH&quot;</filter>
+  </calculationView>
+</calculationViews>
+<logicalModel id="IoT">
+  <attributes>
+    <attribute id="Id" key="true" order="1" displayAttribute="false" attributeHierarchyActive="false">
+      <descriptions defaultDescription="Device"/>
+      <keyMapping columnObjectName="IoT" columnName="Device"/>
+    </attribute>
+  
+    <attribute id="Date" order="2" displayAttribute="false" attributeHierarchyActive="false" key="true">
+      <descriptions defaultDescription="0MONTH"/>
+      <keyMapping columnObjectName="IoT" columnName="0MONTH"/>
+    </attribute></attributes>
+  <calculatedAttributes/>
+  <baseMeasures>
+    <measure id="Temperature" order="3" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Temperature"/>
+      <measureMapping columnObjectName="IoT" columnName="Temperature"/>
+    </measure>
+    <measure id="Luminisoty" order="4" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Luminisoty"/>
+      <measureMapping columnObjectName="IoT" columnName="Luminisoty"/>
+    </measure>
+    <measure id="Tension" order="5" aggregationType="sum" measureType="simple">
+      <descriptions defaultDescription="Tension"/>
+      <measureMapping columnObjectName="IoT" columnName="Tension"/>
+    </measure>
+  </baseMeasures>
+  <calculatedMeasures/>
+  <restrictedMeasures/>
+  <localDimensions/>
+</logicalModel>
+<layout>
+  <shapes>
+    <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+      <upperLeftCorner x="40" y="85"/>
+    </shape>
+    <shape expanded="true" modelObjectName="IoT" modelObjectNameSpace="CalculationView">
+      <upperLeftCorner x="86" y="265"/>
+      <rectangleSize height="30" width="140"/>
+    </shape>
+  </shapes>
+</layout>
+</Calculation:scenario> 

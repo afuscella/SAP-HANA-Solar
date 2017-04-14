@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Calculation:scenario xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:Calculation="http://www.sap.com/ndb/BiModelCalculation.ecore" schemaVersion="2.3" id="CV_CurrentMonthData" applyPrivilegeType="NONE" checkAnalyticPrivileges="false" defaultClient="crossClient" defaultLanguage="$$language$$" hierarchiesSQLEnabled="false" translationRelevant="true" visibility="reportingEnabled" calculationScenarioType="TREE_BASED" dataCategory="CUBE" enforceSqlExecution="false" executionSemantic="UNDEFINED" outputViewType="Aggregation">
+  <descriptions defaultDescription="CV_CurrentTotal"/>
+  <localVariables/>
+  <variableMappings/>
+  <informationModelLayout relativeWidthScenario="27"/>
+  <dataSources>
+    <DataSource id="T_IOT_E7E2D267797BCD36B520" type="DATA_BASE_TABLE">
+      <viewAttributes allViewAttributes="true"/>
+      <columnObject schemaName="SYSTEM" columnObjectName="T_IOT_E7E2D267797BCD36B520"/>
+    </DataSource>
+  </dataSources>
+  <calculationViews>
+    <calculationView xsi:type="Calculation:AggregationView" id="IoT">
+      <descriptions/>
+      <viewAttributes>
+        <viewAttribute id="Device"/>
+        <viewAttribute id="Temperature"/>
+        <viewAttribute id="Tension"/>
+        <viewAttribute id="Luminisoty"/>
+        <viewAttribute id="Created"/>
+      </viewAttributes>
+      <calculatedViewAttributes>
+        <calculatedViewAttribute datatype="VARCHAR" id="0MONTH" length="7" expressionLanguage="COLUMN_ENGINE">
+          <formula>midstr(string(&quot;Created&quot;), 0, 4) + midstr(string(&quot;Created&quot;), 5, 3)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="0CALMONTH" length="7" expressionLanguage="COLUMN_ENGINE">
+          <formula>midstr(string(now()), 0, 4) + midstr(string(now()), 5, 3)</formula>
+        </calculatedViewAttribute>
+        <calculatedViewAttribute datatype="VARCHAR" id="0TIME" length="10" expressionLanguage="COLUMN_ENGINE">
+          <formula>time(string(&quot;Created&quot;))</formula>
+        </calculatedViewAttribute>
+      </calculatedViewAttributes>
+      <input node="#T_IOT_E7E2D267797BCD36B520">
+        <mapping xsi:type="Calculation:AttributeMapping" target="Device" source="G_DEVICE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Temperature" source="C_TEMPERATURE"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Tension" source="C_TENSION"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Luminisoty" source="C_LUMINOSITY"/>
+        <mapping xsi:type="Calculation:AttributeMapping" target="Created" source="G_CREATED"/>
+      </input>
+      <filter>&quot;0CALMONTH&quot; = &quot;0MONTH&quot;</filter>
+    </calculationView>
+  </calculationViews>
+  <logicalModel id="IoT">
+    <descriptions/>
+    <attributes>
+      <attribute id="Id" key="true" order="1" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Device"/>
+        <keyMapping columnObjectName="IoT" columnName="Device"/>
+      </attribute>
+      <attribute id="Date" key="true" order="2" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Date"/>
+        <keyMapping columnObjectName="IoT" columnName="0MONTH"/>
+      </attribute>
+      <attribute id="Time" key="true" order="3" attributeHierarchyActive="false" displayAttribute="false">
+        <descriptions defaultDescription="Time"/>
+        <keyMapping columnObjectName="IoT" columnName="0TIME"/>
+      </attribute>
+    </attributes>
+    <calculatedAttributes/>
+    <privateDataFoundation>
+      <tableProxies/>
+      <joins/>
+      <layout>
+        <shapes/>
+      </layout>
+    </privateDataFoundation>
+    <baseMeasures>
+      <measure id="Temperature" order="4" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Temperature"/>
+        <measureMapping columnObjectName="IoT" columnName="Temperature"/>
+      </measure>
+      <measure id="Luminisoty" order="5" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Luminisoty"/>
+        <measureMapping columnObjectName="IoT" columnName="Luminisoty"/>
+      </measure>
+      <measure id="Tension" order="6" aggregationType="sum" measureType="simple">
+        <descriptions defaultDescription="Tension"/>
+        <measureMapping columnObjectName="IoT" columnName="Tension"/>
+      </measure>
+    </baseMeasures>
+    <calculatedMeasures/>
+    <restrictedMeasures/>
+    <localDimensions/>
+  </logicalModel>
+  <layout>
+    <shapes>
+      <shape expanded="true" modelObjectName="Output" modelObjectNameSpace="MeasureGroup">
+        <upperLeftCorner x="22" y="87"/>
+        <rectangleSize/>
+      </shape>
+      <shape expanded="true" modelObjectName="IoT" modelObjectNameSpace="CalculationView">
+        <upperLeftCorner x="22" y="165"/>
+        <rectangleSize height="30" width="140"/>
+      </shape>
+    </shapes>
+  </layout>
+</Calculation:scenario>

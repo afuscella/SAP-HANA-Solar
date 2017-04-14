@@ -1,0 +1,42 @@
+namespace public.iot.database;
+
+@Schema: 'SYSTEM'
+context iot {
+
+	type BusinessKey: hana.VARCHAR(50);
+	type ShortText: hana.VARCHAR(50);
+    type LongText: hana.VARCHAR(255);
+    
+    @Catalog.tableType: #COLUMN
+    entity Devices {
+        key id: BusinessKey;
+        name: ShortText;
+        device: LongText;
+        createAt: LocalDate;
+        changeAt: LocalTime;
+        capacity: Decimal(15, 2);
+        capacityUnit: String(3);
+        address : Association[1] to Address on address.AddressId = device;
+        geolocation : Association[1] to Geolocation on geolocation.GeolocationId = device;
+    }
+    
+    entity Address {
+        key AddressId: BusinessKey;
+        address: LongText;
+        name: ShortText;
+        webAddress: LongText;
+        phoneNumber: ShortText;
+        createAt: LocalDate;
+        changeAt: LocalTime;
+    }
+    
+    entity Geolocation {
+        key GeolocationId: BusinessKey;
+        latitude: Decimal(19, 7);
+        longitude: Decimal(19, 7);
+        altitude: Decimal(19, 7);
+        altitudeUnit: String(3);
+        createAt: LocalDate;
+        changeAt: LocalTime;
+    }
+}
